@@ -1,0 +1,29 @@
+version: '2.0'
+services:
+  custodian-db:
+    image: mysql/mysql-server
+    environment:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_ROOT_PASSWORD
+    ports:
+      - 3306:3306
+      - 33060:33060
+      - 33061:33061
+    restart: unless-stopped
+
+  custodian-api:
+    build:
+      context: .
+    environment:
+      - MYSQL_PASSWORD
+      - AUTH0_AUDIENCE
+      - AUTH0_CLIENT_SECRET
+      - AUTH0_CLAIMS
+      - AUTH0_DOMAIN
+    ports:
+      - 4000:4000
+    depends_on:
+      - custodian-db
+    restart: unless-stopped
